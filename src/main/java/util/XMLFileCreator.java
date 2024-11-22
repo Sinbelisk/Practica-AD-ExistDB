@@ -15,6 +15,15 @@ import java.lang.reflect.Field;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
+import org.w3c.dom.*;
+import javax.xml.parsers.*;
+import javax.xml.transform.*;
+import javax.xml.transform.dom.*;
+import javax.xml.transform.stream.*;
+import java.io.File;
+import java.lang.reflect.Field;
+import java.util.List;
+
 /**
  * Utility class for creating XML files from Java objects using reflection.
  *
@@ -23,17 +32,23 @@ import javax.xml.transform.TransformerException;
 public class XMLFileCreator {
 
     /**
-     * Creates an XML file from a Java object by inspecting its fields using reflection.
+     * Creates an XML file from a list of Java objects by inspecting their fields using reflection.
      *
-     * @param object The object to be serialized into an XML file.
+     * @param objects The list of objects to be serialized into an XML file.
      * @param outputPath The path where the XML file will be saved.
-     * @param <T> The type of the object.
+     * @param parentTagName The name of the parent tag that will wrap all the objects.
+     * @param <T> The type of the objects in the list.
      * @throws Exception If an error occurs during XML file creation.
      */
-    public static <T> void createXmlFile(T object, String outputPath) throws Exception {
+    public static <T> void createXmlFile(List<T> objects, String outputPath, String parentTagName) throws Exception {
         Document document = createDocument();
-        Element rootElement = createRootElement(object, document);
-        populateFields(object, document, rootElement);
+        Element rootElement = createRootElement(parentTagName, document);
+
+        // Iterate through the list of objects and create XML elements for each one.
+        for (T object : objects) {
+            populateObjectFields(object, document, rootElement);
+        }
+
         transformToXml(document, outputPath);
     }
 
@@ -50,15 +65,14 @@ public class XMLFileCreator {
     }
 
     /**
-     * Creates the root element of the XML file based on the object's class name.
+     * Creates the root element of the XML file based on the specified parent tag name.
      *
-     * @param object The object to extract the root name from.
+     * @param parentTagName The name of the parent tag.
      * @param document The Document object to create the root element in.
      * @return The root element of the XML file.
      */
-    private static Element createRootElement(Object object, Document document) {
-        String rootName = object.getClass().getSimpleName().toLowerCase();
-        Element rootElement = document.createElement(rootName);
+    private static Element createRootElement(String parentTagName, Document document) {
+        Element rootElement = document.createElement(parentTagName);
         document.appendChild(rootElement);
         return rootElement;
     }
@@ -71,7 +85,11 @@ public class XMLFileCreator {
      * @param rootElement The root element to append field elements to.
      * @throws IllegalAccessException If an error occurs while accessing field values.
      */
-    private static void populateFields(Object object, Document document, Element rootElement) throws IllegalAccessException {
+    private static void populateObjectFields(Object object, Document document, Element rootElement) throws IllegalAccessException {
+        String objectTagName = object.getClass().getSimpleName().toLowerCase();
+        Element objectElement = document.createElement(objectTagName);
+        rootElement.appendChild(objectElement);
+
         Field[] fields = object.getClass().getDeclaredFields();
         for (Field field : fields) {
             field.setAccessible(true); // Access private fields
@@ -79,7 +97,7 @@ public class XMLFileCreator {
             Object fieldValue = field.get(object);
 
             if (fieldValue != null) {
-                createFieldElement(document, rootElement, fieldName, fieldValue);
+                createFieldElement(document, objectElement, fieldName, fieldValue);
             }
         }
     }
@@ -88,14 +106,14 @@ public class XMLFileCreator {
      * Creates a field element for the XML document.
      *
      * @param document The Document object to create the element in.
-     * @param rootElement The root element to append the field element to.
+     * @param objectElement The object element to append the field element to.
      * @param fieldName The name of the field.
      * @param fieldValue The value of the field.
      */
-    private static void createFieldElement(Document document, Element rootElement, String fieldName, Object fieldValue) {
+    private static void createFieldElement(Document document, Element objectElement, String fieldName, Object fieldValue) {
         Element fieldElement = document.createElement(fieldName);
         fieldElement.appendChild(document.createTextNode(fieldValue.toString()));
-        rootElement.appendChild(fieldElement);
+        objectElement.appendChild(fieldElement);
     }
 
     /**
@@ -113,4 +131,5 @@ public class XMLFileCreator {
         transformer.transform(domSource, streamResult);
     }
 }
+
 
