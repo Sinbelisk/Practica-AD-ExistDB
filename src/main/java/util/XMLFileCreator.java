@@ -90,9 +90,12 @@ public class XMLFileCreator {
         Element objectElement = document.createElement(objectTagName);
         rootElement.appendChild(objectElement);
 
+        // Iterates through the fields of the class.
         Field[] fields = object.getClass().getDeclaredFields();
         for (Field field : fields) {
             field.setAccessible(true); // Access private fields
+
+            // Name and value of the current field.
             String fieldName = field.getName();
             Object fieldValue = field.get(object);
 
@@ -100,6 +103,7 @@ public class XMLFileCreator {
                 createFieldElement(document, objectElement, fieldName, fieldValue);
             }
 
+            // Ensures the accessibility sets to false
             field.setAccessible(false);
         }
     }

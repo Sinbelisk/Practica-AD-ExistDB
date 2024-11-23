@@ -13,7 +13,6 @@ public class ExistDatabaseConnection {
 
     private static final String URI = "xmldb:exist://localhost:8080/exist/xmlrpc";
 
-
     // NOTE: This is for testing purposes only, having credentials in plain files is a bad practice.
     private static final String USERNAME = "admin";
     private static final String PASSWORD = "";

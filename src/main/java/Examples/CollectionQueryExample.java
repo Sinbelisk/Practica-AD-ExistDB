@@ -6,6 +6,7 @@ import library.model.Book;
 import library.model.Essay;
 import library.model.Poem;
 import library.service.ExistDatabaseConnection;
+import org.xmldb.api.base.XMLDBException;
 
 import java.util.List;
 
@@ -23,11 +24,23 @@ public class CollectionQueryExample {
         }
         LibraryDao dao = new LibraryDaoIMP(dbConnection);
 
+        // Shows the queries for books, poems and essays
         queryBooksAndPoems(dao);
         queryEssays(dao);
 
+
+        // Closes the database connection.
+        try{
+            dbConnection.close();
+        } catch (XMLDBException e) {
+            throw new RuntimeException(e);
+        }
     }
 
+    /**
+     * Show the result query from the Essay collection.
+     * @param dao DAO instance
+     */
     private static void queryEssays(LibraryDao dao) {
         List<Essay> essayQueryResult = dao.getEssaysUnderAge0(BASE_NAME + "Ensayos");
         printCollection(essayQueryResult, "Essays: ");
@@ -39,6 +52,7 @@ public class CollectionQueryExample {
         List<Book> bookQueryUnder1950 = dao.getBooksUnder1950(BASE_NAME + "Novelas");
         List<Poem> poemQueryResult = dao.getAllPoems(BASE_NAME + "Poemas");
 
+        // Prints
         printCollection(bookQueryResult, "Books: ");
         printCollection(bookQueryUnder1950, "Books before 1950: ");
         printCollection(poemQueryResult, "Poems: ");

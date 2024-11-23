@@ -29,8 +29,8 @@ public class NewCollectionQueryExample {
     }
 
     /**
-     * Initializes the specified collection
-     * @param collection the XMLCollection class to fill
+     * Initializes the specified collection.
+     * @param collection the XMLCollection class to fill.
      * @param name name of the file.
      */
     private static void createCollection (XMLCollection<Essay> collection, String name){
