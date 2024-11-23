@@ -4,7 +4,7 @@ package library.model;
  * Represents a book with a title, author, and publication year.
  * This class provides getters and setters for these attributes.
  */
-public class Book {
+public class Book implements DatabaseModel{
     private String title;
     private String author;
     private int publishYear;
@@ -23,6 +23,13 @@ public class Book {
     }
 
     /**
+     * Empty constructor for building an instance using reflection.
+     */
+    public Book(){
+
+    }
+
+    /**
      * Retrieves the title of the book.
      *
      * @return The title of the book.
@@ -31,14 +38,6 @@ public class Book {
         return title;
     }
 
-    /**
-     * Sets the title of the book.
-     *
-     * @param title The new title of the book.
-     */
-    public void setTitle(String title) {
-        this.title = title;
-    }
 
     /**
      * Retrieves the author of the book.
@@ -49,14 +48,6 @@ public class Book {
         return author;
     }
 
-    /**
-     * Sets the author of the book.
-     *
-     * @param author The new author of the book.
-     */
-    public void setAuthor(String author) {
-        this.author = author;
-    }
 
     /**
      * Retrieves the publication year of the book.
@@ -67,12 +58,12 @@ public class Book {
         return publishYear;
     }
 
-    /**
-     * Sets the publication year of the book.
-     *
-     * @param publishYear The new publication year of the book.
-     */
-    public void setPublishYear(int publishYear) {
-        this.publishYear = publishYear;
+    @Override
+    public String toString() {
+        return "Book{" +
+                "title='" + title + '\'' +
+                ", author='" + author + '\'' +
+                ", publishYear=" + publishYear +
+                '}';
     }
 }

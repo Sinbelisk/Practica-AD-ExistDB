@@ -1,5 +1,6 @@
 package library.Dao;
 
+import library.model.DatabaseModel;
 import library.service.ExistDatabaseConnection;
 import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.ResourceIterator;
@@ -14,132 +15,157 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 /**
- * A class for executing ExistDB queries with XQuery.
- * @author Rafael Franciso Jiménez Rayo.
+ * Manages the execution of database queries and maps the results to instances of {@link DatabaseModel} objects.
+ * <p>
+ * This class facilitates querying collections in an eXist-db database and automatically maps the resulting XML data
+ * to objects of a specified {@link DatabaseModel} implementation using reflection. This approach allows for dynamic
+ * data retrieval and object population, making it flexible for various use cases.
+ * </p>
+ *
+ * <p>
+ * The class handles the creation of query services, processing of query results, and the mapping of XML content to
+ * Java objects while ensuring that errors are logged for debugging and troubleshooting purposes.
+ * </p>
+ *
+ * @author Rafael Francisco Jiménez Rayo
  */
 public class QueryManager {
+
+    private static final Logger logger = Logger.getLogger(QueryManager.class.getName());
     private final ExistDatabaseConnection dbConnection;
 
-    public QueryManager(ExistDatabaseConnection databaseConnection){
+    /**
+     * Creates a new {@code QueryManager} with the specified database connection.
+     *
+     * @param databaseConnection The connection to the eXist-db database.
+     */
+    public QueryManager(ExistDatabaseConnection databaseConnection) {
         this.dbConnection = databaseConnection;
     }
 
     /**
-     * Queries a collection in the eXist-db database and maps the results to objects of a specified class type.
+     * Executes an XPath query on a specified collection in the eXist-db database and maps the results to objects
+     * of the specified {@link DatabaseModel} implementation.
      *
-     * @param collectionName The name of the collection to query.
+     * @param collectionName The name of the collection to query in the database.
      * @param query The XPath query to execute.
      * @param clazz The class type of the objects to map the XML results to.
-     * @param <T> The type of objects in the list.
-     * @return A list of objects of type {@code T} that match the query.
+     * @param <T> The type of objects to be returned, which must extend {@link DatabaseModel}.
+     * @return A list of objects of type {@code T} that match the query, or an empty list if no matches are found or an error occurs.
      */
-    public <T> List<T> queryItems(String collectionName, String query, Class<T> clazz) {
-        try {
-            Collection col = dbConnection.getCollection(collectionName);
+    public <T extends DatabaseModel> List<T> queryItems(String collectionName, String query, Class<T> clazz) {
+        try (Collection col = dbConnection.getCollection(collectionName)) {
             XPathQueryService service = (XPathQueryService) col.getService("XPathQueryService", "1.0");
             ResourceSet result = service.query(query);
-
             return processQueryResults(result, clazz);
         } catch (Exception e) {
-            logError("Error querying the collection", e);
+            logError(Level.SEVERE, "Error querying the collection", e);
             return Collections.emptyList();
         }
     }
 
     /**
-     * Processes the query results and maps them to a list of objects.
+     * Processes the query results and maps them to a list of objects of the specified type.
      *
-     * @param result The result set from the query execution.
-     * @param clazz The class type of the objects.
-     * @param <T> The type of objects in the list.
-     * @return A list of objects of type {@code T}.
+     * @param result The {@link ResourceSet} containing the results of the query.
+     * @param clazz The class type of the objects to map the results to.
+     * @param <T> The type of objects to be returned, which must extend {@link DatabaseModel}.
+     * @return A list of objects of type {@code T} derived from the XML query results.
      */
-    private <T> List<T> processQueryResults(ResourceSet result, Class<T> clazz) {
+    private <T extends DatabaseModel> List<T> processQueryResults(ResourceSet result, Class<T> clazz) {
         List<T> items = new ArrayList<>();
         try {
             ResourceIterator iterator = result.getIterator();
             while (iterator.hasMoreResources()) {
                 XMLResource resource = (XMLResource) iterator.nextResource();
-                T item = mapXmlToObject((String) resource.getContent(), clazz);
+                T item = mapXmlToObject(resource.getContent().toString(), clazz);
                 if (item != null) items.add(item);
             }
         } catch (Exception e) {
-            logError("Error processing query results", e);
+            logError(Level.SEVERE, "Error processing query results", e);
         }
         return items;
     }
 
     /**
-     * Maps XML content to an object of the specified class type.
+     * Maps the XML content of a {@link XMLResource} to an object of the specified class type.
      *
-     * @param content The XML content.
-     * @param clazz The class type of the object.
-     * @param <T> The type of the object.
-     * @return An object of type {@code T}, or null if mapping fails.
+     * @param content The XML content as a {@link String} to be mapped.
+     * @param clazz The class type of the object to map the XML content to.
+     * @param <T> The type of the object, which must extend {@link DatabaseModel}.
+     * @return An object of type {@code T} populated with data from the XML content, or {@code null} if the mapping fails.
      */
-    private <T> T mapXmlToObject(String content, Class<T> clazz) {
+    private <T extends DatabaseModel> T mapXmlToObject(String content, Class<T> clazz) {
         try {
+            // Create a new instance of the specified class type
             T item = clazz.getDeclaredConstructor().newInstance();
+
+            // Iterate over the declared fields in the class
             for (Field field : clazz.getDeclaredFields()) {
-                field.setAccessible(true);
+                field.setAccessible(true); // Ensure field is accessible
+
+                // Extract the field value from the XML content using its name
                 String fieldValue = extractFieldValue(content, field.getName());
-                setFieldValue(item, field, fieldValue);
+                if (fieldValue != null) {
+                    // Assign the extracted value to the field of the object
+                    setFieldValue(item, field, fieldValue);
+                }
             }
             return item;
+
         } catch (Exception e) {
-            logError("Error mapping XML to object", e);
+            logError(Level.SEVERE, "Error mapping XML to object", e);
             return null;
         }
     }
 
     /**
-     * Extracts a field value from XML content using a Regular Expression.
+     * Extracts the value of a specified field from XML content using a Regular Expression to match the field name.
      *
-     * @param content The XML content.
-     * @param fieldName The field name to extract.
-     * @return The extracted value, or null if not found.
+     * @param content The XML content to search within.
+     * @param fieldName The name of the field to extract from the XML.
+     * @return The field value as a {@link String}, or {@code null} if the field is not found.
      */
     private String extractFieldValue(String content, String fieldName) {
-        try {
-            Pattern pattern = Pattern.compile("<" + fieldName + ">(.*?)</" + fieldName + ">");
-            Matcher matcher = pattern.matcher(content);
-            return matcher.find() ? matcher.group(1) : null;
-        } catch (Exception e) {
-            logError("Error extracting field value", e);
-            return null;
-        }
+        Matcher matcher = Pattern.compile("<" + fieldName + ">(.*?)</" + fieldName + ">").matcher(content);
+        return matcher.find() ? matcher.group(1) : null;
     }
 
     /**
-     * Sets a field value on the specified object using reflection.
+     * Sets the value of a field in an object using reflection.
      *
-     * @param item The object.
-     * @param field The field to set.
-     * @param fieldValue The value to set.
-     * @param <T> The type of the object.
+     * @param item The object whose field value is to be set.
+     * @param field The field to set the value for.
+     * @param value The value to assign to the field.
+     * @param <T> The type of the object whose field is being set.
      */
-    private <T> void setFieldValue(T item, Field field, String fieldValue) {
+    private <T extends DatabaseModel> void setFieldValue(T item, Field field, String value) {
         try {
-            if (fieldValue != null) {
+            field.setAccessible(true);
+            if (value != null) {
+                // Assign the value based on the field's type
                 if (field.getType().equals(String.class)) {
-                    field.set(item, fieldValue);
+                    field.set(item, value);
                 } else if (field.getType().equals(int.class)) {
-                    field.set(item, Integer.parseInt(fieldValue));
+                    field.set(item, Integer.parseInt(value));
                 }
             }
         } catch (Exception e) {
-            logError("Error setting field value", e);
+            logError(Level.SEVERE, "Error setting field value", e);
         }
     }
 
     /**
-     * Logs errors to the standard error output.
+     * Logs errors using the Java {@link Logger} with a specific severity level.
      *
-     * @param message The error message.
-     * @param e The exception.
+     * @param level The level of the log message (e.g., {@link Level#SEVERE}).
+     * @param message A descriptive error message.
+     * @param e The exception associated with the error, if any.
      */
-    private void logError(String message, Exception e) {
-        System.err.println(message + ": " + e.getMessage());
+    private void logError(Level level, String message, Exception e) {
+        logger.log(level, message, e);
     }
 }

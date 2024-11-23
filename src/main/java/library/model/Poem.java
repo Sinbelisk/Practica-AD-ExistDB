@@ -4,7 +4,7 @@ package library.model;
  * Represents a poem with a title and an author.
  * This class provides getters and setters for the poem's title and author.
  */
-public class Poem {
+public class Poem implements DatabaseModel {
     private String title;
     private String author;
 
@@ -20,6 +20,13 @@ public class Poem {
     }
 
     /**
+     * Empty constructor for building an instance using reflection.
+     */
+    public Poem(){
+
+    }
+
+    /**
      * Retrieves the title of the poem.
      *
      * @return The title of the poem.
@@ -28,14 +35,6 @@ public class Poem {
         return title;
     }
 
-    /**
-     * Sets the title of the poem.
-     *
-     * @param title The new title of the poem.
-     */
-    public void setTitle(String title) {
-        this.title = title;
-    }
 
     /**
      * Retrieves the author of the poem.
@@ -46,12 +45,11 @@ public class Poem {
         return author;
     }
 
-    /**
-     * Sets the author of the poem.
-     *
-     * @param author The new author of the poem.
-     */
-    public void setAuthor(String author) {
-        this.author = author;
+    @Override
+    public String toString() {
+        return "Poem{" +
+                "title='" + title + '\'' +
+                ", author='" + author + '\'' +
+                '}';
     }
 }

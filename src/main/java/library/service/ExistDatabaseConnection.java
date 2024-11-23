@@ -16,7 +16,7 @@ public class ExistDatabaseConnection {
 
     // NOTE: This is for testing purposes only, having credentials in plain files is a bad practice.
     private static final String USERNAME = "admin";
-    private static final String PASSWORD = "1234";
+    private static final String PASSWORD = "";
 
 
     // Static variable to hold the single instance of the connection

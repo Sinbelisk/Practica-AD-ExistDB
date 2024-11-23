@@ -9,6 +9,8 @@ import java.util.List;
  * Implementation of the {@link LibraryDao} interface that interacts with the eXist-db database
  * to retrieve books and poems from the specified collections.
  * This class provides methods to query for books and poems based on various criteria.
+ * <p>
+ * Yes, this class has a comically complex structure for a simple query.
  */
 public class LibraryDaoIMP implements LibraryDao {
     private ExistDatabaseConnection dbConnection;
@@ -18,16 +20,9 @@ public class LibraryDaoIMP implements LibraryDao {
      * Constructor that initializes the singleton connection to the eXist-db database.
      * If the connection fails, it catches and logs the exception.
      */
-    public LibraryDaoIMP() {
-        dbConnection = null;
-        queryManager = null;
-        try {
-            // Attempt to get the database connection using the singleton pattern
-            dbConnection = ExistDatabaseConnection.getInstance();
-            this.queryManager = new QueryManager(dbConnection);
-        } catch (Exception e) {
-            System.err.println("ERROR WHEN INSTANCIATING THE DATABASE.");
-        }
+    public LibraryDaoIMP(ExistDatabaseConnection dbConnection) {
+        this.dbConnection = dbConnection;
+        queryManager = new QueryManager(dbConnection);
     }
 
     /**
