@@ -14,4 +14,28 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <dependencies>
+        <!-- Dependency for xmldb-api -->
+        <dependency>
+            <groupId>net.sf.xmldb-org</groupId>
+            <artifactId>xmldb-api</artifactId>
+            <version>1.7.0</version>
+        </dependency>
+
+        <!-- Dependency for the second xmldb-api -->
+        <dependency>
+            <groupId>org.exist-db.thirdparty.org.xmldb</groupId>
+            <artifactId>xmldb-api</artifactId>
+            <version>20040731</version>
+        </dependency>
+
+        <!-- Dependency for exist-core -->
+        <dependency>
+            <groupId>org.exist-db</groupId>
+            <artifactId>exist-core</artifactId>
+            <version>6.2.0</version>
+        </dependency>
+    </dependencies>
+
+
 </project>
