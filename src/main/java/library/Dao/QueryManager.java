@@ -115,6 +115,8 @@ public class QueryManager {
                     // Assign the extracted value to the field of the object
                     setFieldValue(item, field, fieldValue);
                 }
+                // Ensure the field is no longer accessible.
+                field.setAccessible(false);
             }
             return item;
 
@@ -146,7 +148,6 @@ public class QueryManager {
      */
     private <T extends DatabaseModel> void setFieldValue(T item, Field field, String value) {
         try {
-            field.setAccessible(true);
             if (value != null) {
                 // Assign the value based on the field's type
                 if (field.getType().equals(String.class)) {

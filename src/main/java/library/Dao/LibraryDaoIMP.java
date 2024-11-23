@@ -9,12 +9,10 @@ import java.util.List;
  * Implementation of the {@link LibraryDao} interface that interacts with the eXist-db database
  * to retrieve books and poems from the specified collections.
  * This class provides methods to query for books and poems based on various criteria.
- * <p>
- * Yes, this class has a comically complex structure for a simple query.
  */
 public class LibraryDaoIMP implements LibraryDao {
     private ExistDatabaseConnection dbConnection;
-    private QueryManager queryManager;
+    private final QueryManager queryManager;
 
     /**
      * Constructor that initializes the singleton connection to the eXist-db database.
@@ -47,7 +45,6 @@ public class LibraryDaoIMP implements LibraryDao {
      */
     @Override
     public List<Book> getAllBooks(String collectionName) {
-        System.out.println(collectionName);
         String query = "for $book in //book return $book";
         return queryManager.queryItems(collectionName, query, Book.class);
     }

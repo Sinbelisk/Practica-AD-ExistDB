@@ -1,11 +1,1 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<poemario>
-    <poem>
-        <title>Rima I</title>
-        <author>Gustavo Adolfo Bécquer</author>
-    </poem>
-    <poem>
-        <title>Altazor</title>
-        <author>Vicente Huidobro</author>
-    </poem>
-</poemario>
+<?xml version="1.0" encoding="UTF-8"?><poemario><poem><title>Rima I</title><author>Gustavo Adolfo Bécquer</author></poem><poem><title>Altazor</title><author>Vicente Huidobro</author></poem></poemario>

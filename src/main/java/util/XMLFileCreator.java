@@ -99,6 +99,8 @@ public class XMLFileCreator {
             if (fieldValue != null) {
                 createFieldElement(document, objectElement, fieldName, fieldValue);
             }
+
+            field.setAccessible(false);
         }
     }
 
