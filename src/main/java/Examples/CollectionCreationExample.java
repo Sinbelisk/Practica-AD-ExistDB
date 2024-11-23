@@ -1,13 +1,15 @@
+package Examples;
+
 import library.model.Book;
 import library.model.XMLCollection;
 import library.model.Poem;
 import util.XMLFileCreator;
 
-public class Main {
+public class CollectionCreationExample {
     private static final String OUT_PATH = "Output/";
     public static void main(String[] args) {
         createBookCollection();
-        createPoemaryCollection();
+        createPoemCollection();
     }
 
     private static void createBookCollection(){
@@ -20,7 +22,7 @@ public class Main {
         createCollection(library, "libreria.xml");
     }
 
-    private static void createPoemaryCollection(){
+    private static void createPoemCollection(){
         Poem p1 = new Poem("Rima I", "Gustavo Adolfo Bécquer");
         Poem p2 = new Poem("Altazor", "Vicente Huidobro");
 
