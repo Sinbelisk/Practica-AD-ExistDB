@@ -3,6 +3,7 @@ package Examples;
 import library.Dao.LibraryDao;
 import library.Dao.LibraryDaoIMP;
 import library.model.Book;
+import library.model.Essay;
 import library.model.Poem;
 import library.service.ExistDatabaseConnection;
 
@@ -22,15 +23,25 @@ public class CollectionQueryExample {
         }
         LibraryDao dao = new LibraryDaoIMP(dbConnection);
 
+        queryBooksAndPoems(dao);
+        queryEssays(dao);
+
+    }
+
+    private static void queryEssays(LibraryDao dao) {
+        List<Essay> essayQueryResult = dao.getEssaysUnderAge0(BASE_NAME + "Ensayos");
+        printCollection(essayQueryResult, "Essays: ");
+    }
+
+    private static void queryBooksAndPoems(LibraryDao dao) {
         // List which contains objects with the data of the query
         List<Book> bookQueryResult = dao.getAllBooks(BASE_NAME + "Novelas");
         List<Book> bookQueryUnder1950 = dao.getBooksUnder1950(BASE_NAME + "Novelas");
         List<Poem> poemQueryResult = dao.getAllPoems(BASE_NAME + "Poemas");
 
-        printCollection(bookQueryResult, "Libros: ");
-        printCollection(bookQueryUnder1950, "Libros anteriores a 1950: ");
-        printCollection(poemQueryResult, "Poemas: ");
-
+        printCollection(bookQueryResult, "Books: ");
+        printCollection(bookQueryUnder1950, "Books before 1950: ");
+        printCollection(poemQueryResult, "Poems: ");
     }
 
     /**

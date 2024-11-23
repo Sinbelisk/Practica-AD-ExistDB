@@ -20,7 +20,7 @@ public class NewCollectionQueryExample {
      */
     private static void createBookCollection(){
         Essay e1 = new Essay("La Rebelión de las Masas", "José Ortega y Gasset", 1930);
-        Essay e2 = new Essay("El arte de la guerra", "Sun Tzu", 500);
+        Essay e2 = new Essay("El arte de la guerra", "Sun Tzu", -500);
 
         XMLCollection<Essay> essays = new XMLCollection<>("ensayos");
         essays.addItems(e1, e2);

@@ -1,6 +1,7 @@
 package library.Dao;
 
 import library.model.Book;
+import library.model.Essay;
 import library.model.Poem;
 import library.service.ExistDatabaseConnection;
 import java.util.List;
@@ -61,4 +62,18 @@ public class LibraryDaoIMP implements LibraryDao {
         String query = "for $poem in //poem return $poem";
         return queryManager.queryItems(collectionName, query, Poem.class);
     }
+
+    /**
+     * Retrieves all essays from the specified collection that were published before age 0.
+     * * The query is executed using XPath syntax on the XML data stored in the collection.
+     * @param collectionName The name of the collection to query from.
+     * @return A list of all {@link Essay} objects in the specified collection.
+     */
+    @Override
+    public List<Essay> getEssaysUnderAge0(String collectionName) {
+        String query = "//essay[year < 0]";
+        return queryManager.queryItems(collectionName, query, Essay.class);
+    }
+
+
 }
