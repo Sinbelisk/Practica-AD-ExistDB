@@ -5,11 +5,7 @@ package library.model;
  * This class provides getters and setters for the poem's title and author.
  */
 public class Poem {
-
-    // The title of the poem.
     private String title;
-
-    // The author of the poem.
     private String author;
 
     /**

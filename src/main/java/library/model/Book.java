@@ -5,14 +5,8 @@ package library.model;
  * This class provides getters and setters for these attributes.
  */
 public class Book {
-
-    // The title of the book.
     private String title;
-
-    // The author of the book.
     private String author;
-
-    // The year the book was published.
     private int publishYear;
 
     /**
