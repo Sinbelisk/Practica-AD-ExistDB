@@ -60,6 +60,8 @@ public class QueryManager {
         try (Collection col = dbConnection.getCollection(collectionName)) {
             XPathQueryService service = (XPathQueryService) col.getService("XPathQueryService", "1.0");
             ResourceSet result = service.query(query);
+            col.close();
+
             return processQueryResults(result, clazz);
         } catch (Exception e) {
             logError(Level.SEVERE, "Error querying the collection", e);

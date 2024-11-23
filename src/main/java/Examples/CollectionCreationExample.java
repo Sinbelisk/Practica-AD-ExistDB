@@ -5,8 +5,10 @@ import library.model.XMLCollection;
 import library.model.Poem;
 import util.XMLFileCreator;
 
+import java.io.File;
+
 public class CollectionCreationExample {
-    private static final String OUT_PATH = "Output/";
+    private static final String OUT_PATH = "Output" + File.separator;
     public static void main(String[] args) {
         createBookCollection();
         createPoemCollection();
