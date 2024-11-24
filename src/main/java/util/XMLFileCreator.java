@@ -79,6 +79,7 @@ public class XMLFileCreator {
 
     /**
      * Populates the XML document with elements corresponding to the object's fields.
+     * The method uses reflection to get the field name and value.
      *
      * @param object The object whose fields will be serialized.
      * @param document The Document object where elements will be added.

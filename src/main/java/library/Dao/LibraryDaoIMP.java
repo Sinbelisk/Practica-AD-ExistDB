@@ -33,7 +33,7 @@ public class LibraryDaoIMP implements LibraryDao {
      */
     @Override
     public List<Book> getBooksUnder1950(String collectionName) {
-        String query = "//book[publishYear < 1950]";
+        String query = "for $book in //book[publishYear < 1950] return $book";
         return queryManager.queryItems(collectionName, query, Book.class);
     }
 
@@ -71,7 +71,7 @@ public class LibraryDaoIMP implements LibraryDao {
      */
     @Override
     public List<Essay> getEssaysUnderAge0(String collectionName) {
-        String query = "//essay[year < 0]";
+        String query = "for $essay in //essay[year < 0] return $essay";
         return queryManager.queryItems(collectionName, query, Essay.class);
     }
 

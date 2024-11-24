@@ -49,6 +49,7 @@ public class CollectionQueryExample {
 
     private static void queryBooksAndPoems(LibraryDao dao) {
         // List which contains objects with the data of the query
+
         // "Collection name" is the name of the collection inside the base directory.
         List<Book> bookQueryResult = dao.getAllBooks(BASE_COLLECTION + "Novelas");
         List<Book> bookQueryUnder1950 = dao.getBooksUnder1950(BASE_COLLECTION + "Novelas");
