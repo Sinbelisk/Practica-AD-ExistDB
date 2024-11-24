@@ -21,10 +21,10 @@ This project combines Java and XML database to show:
 ## Features
 - **Create XML documents** dynamically using Java's DOM API. You can generate XML data representing complex structures like books, poems, or essays.
 - **Interact with an eXist-db database** for retrieving XML data. eXist-db is a native XML database that supports XML data manipulation and querying.
-- **Execute XQuery scripts**to query XML data stored in eXist-db. XQuery provides a powerful way to query and manipulate XML data.
+- **Execute XQuery scripts** to query XML data stored in eXist-db. XQuery provides a powerful way to query and manipulate XML data.
 - A simple and reusable code structure for learning and extending, making it easy to adapt this project for various types of XML data and use cases.
   
-- **Note:** Ensure that eXist-db is correctly configured and running on your system before executing any queries. You may need to configure the eXist-db server or adjust connection settings in the ExistDatabaseConnection.java file.
+**Note:** Ensure that eXist-db is correctly configured and running on your system before executing any queries. You may need to configure the eXist-db server or adjust connection settings in the ExistDatabaseConnection.java file.
 
 ## Requirements
 - **Java Development Kit (JDK)** 8 or higher.
@@ -52,13 +52,17 @@ This package contains the core logic and models for managing XML data and intera
    - **`Book.java`**, **`Poem.java`**, **`Essay.java`**: Represent different types of documents (books, poems, essays) with their respective properties. Each class follows the structure of the data being modeled and can be used to create XML documents with the same structure.
    - **`XMLCollection.java`**: Encapsulates a collection of model classes (eg: Book) for creating XML documents.
    - **`DatabaseModel.java`**: An empty interface, which defines a Data Object, necessary for mapping the query results into data objects. It is a placeholder for any class that should be used for data mapping.
+
+
 - **`service`**: Provides services for database connectivity.
    - **`ExistDatabaseConnection.java`**: Handles the connection setup and management with the eXist-db database. This singleton class ensures that the Java application can interact with the eXist-db server.
+
+
 - **`Dao`**: Implements the data access layer for interacting with XML documents stored in the database.
    - **`LibraryDao.java`**: Defines the interface for database query operations. This interface abstracts the database interaction and can be extended to add additional query methods.
    - **`LibraryDaoIMP.java`**: Implements the methods declared in `LibraryDao`. It contains the logic for interacting with the database, such as executing queries and returning results.
    - **`QueryManager.java`**: Manages XQuery statements and their execution. The class maps the query results into `DatabaseModel` object instances. Note that inherited classes are not supported in this implementation, ensuring that only direct classes are used for data mapping.
-   
+
 ### **`util` Package**
 Contains utility classes to support the project:
 - **`XMLFileCreator.java`**: This utility class can convert a list of data objects into XML format using generics and reflection, making it easy to store data in XML documents.
