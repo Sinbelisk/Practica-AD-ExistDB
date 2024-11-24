@@ -6,7 +6,9 @@ import util.XMLFileCreator;
 
 import java.io.File;
 
-
+/**
+ * This is the same as the first creation example, but with only one XML file.
+ */
 public class CollectionCreationExample2 {
     // I use File.separator because depending of the OS, it can be / or \.
     private static final String OUT_PATH = "Output" + File.separator;
