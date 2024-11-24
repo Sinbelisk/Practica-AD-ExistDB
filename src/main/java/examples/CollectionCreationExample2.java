@@ -7,7 +7,7 @@ import util.XMLFileCreator;
 import java.io.File;
 
 
-public class NewCollectionQueryExample {
+public class CollectionCreationExample2 {
     // I use File.separator because depending of the OS, it can be / or \.
     private static final String OUT_PATH = "Output" + File.separator;
 
