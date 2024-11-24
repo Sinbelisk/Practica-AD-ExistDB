@@ -22,6 +22,7 @@ public class CollectionCreationExample {
         Book b1 = new Book("Don Quijote", "Miguel de Cervantes", 1605);
         Book b2 = new Book("1984", "George Orwell", 1949);
 
+        // Collection names are automatically parsed to lowercase.
         XMLCollection<Book> library = new XMLCollection<>("BiBLIOTEca");
         library.addItems(b1, b2);
 
@@ -35,6 +36,7 @@ public class CollectionCreationExample {
         Poem p1 = new Poem("Rima I", "Gustavo Adolfo Bécquer");
         Poem p2 = new Poem("Altazor", "Vicente Huidobro");
 
+        // Collection names are automatically parsed to lowercase.
         XMLCollection<Poem> poems = new XMLCollection<>("POEMARIO");
         poems.addItems(p1, p2);
         

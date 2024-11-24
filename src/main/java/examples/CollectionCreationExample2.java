@@ -16,7 +16,7 @@ public class CollectionCreationExample2 {
     }
 
     /**
-     * Creates a book collection.
+     * Creates a essay collection.
      */
     private static void createBookCollection(){
         Essay e1 = new Essay("La Rebelión de las Masas", "José Ortega y Gasset", 1930);
