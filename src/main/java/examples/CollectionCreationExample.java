@@ -1,4 +1,4 @@
-package Examples;
+package examples;
 
 import library.model.Book;
 import library.model.XMLCollection;

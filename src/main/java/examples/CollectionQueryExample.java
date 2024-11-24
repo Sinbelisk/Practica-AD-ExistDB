@@ -1,4 +1,4 @@
-package Examples;
+package examples;
 
 import library.Dao.LibraryDao;
 import library.Dao.LibraryDaoIMP;

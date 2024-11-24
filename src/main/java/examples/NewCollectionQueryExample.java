@@ -1,4 +1,4 @@
-package Examples;
+package examples;
 
 import library.model.Essay;
 import library.model.XMLCollection;

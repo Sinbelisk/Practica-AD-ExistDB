@@ -1,4 +1,4 @@
-package Examples;
+package examples;
 
 public class EssayQueryExample {
 }
